@@ -1,0 +1,45 @@
+version: '2.2'
+services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.2.3
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - esdata1:/usr/share/elasticsearch/data
+    networks:
+      - esnet
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:6.2.3
+    volumes:
+      - ./kibana/kibana.yml:/usr/share/kibana/config/kibana.yml
+    environment:
+      SERVER_NAME: kibana.poongprui.com
+      ELASTICSEARCH_URL: http://elasticsearch:9200
+    ports:
+      - 5601:5601
+    networks:
+      - esnet
+  logstash:
+    image: docker.elastic.co/logstash/logstash:6.2.3
+    ports:
+      - 5044:5044
+    volumes:
+      - ./logstash/logstash.yml:/usr/share/logstash/config/logstash.yml
+      - ./logstash/conf:/usr/share/logstash/pipeline
+    networks:
+      - esnet
+      
+volumes:
+  esdata1:
+    driver: local
+
+networks:
+  esnet:
