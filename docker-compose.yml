@@ -1,5 +1,15 @@
 version: '2.2'
 services:
+  webserver:
+    image: nginx:1.13.10
+    networks:
+      - esnet
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./nginx/conf:/etc/nginx/conf.d
+
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:6.2.3
     container_name: elasticsearch
@@ -21,10 +31,8 @@ services:
     volumes:
       - ./kibana/kibana.yml:/usr/share/kibana/config/kibana.yml
     environment:
-      SERVER_NAME: kibana.poongprui.com
+      SERVER_NAME: kibana.website.com
       ELASTICSEARCH_URL: http://elasticsearch:9200
-    ports:
-      - 5601:5601
     networks:
       - esnet
   logstash:
