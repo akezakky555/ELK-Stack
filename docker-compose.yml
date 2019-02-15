@@ -1,7 +1,7 @@
-version: '2.2'
+version: '3.4'
 services:
   webserver:
-    image: nginx:1.13.10
+    image: nginx:1.15.8
     networks:
       - esnet
     ports:
@@ -11,7 +11,7 @@ services:
       - ./nginx/conf:/etc/nginx/conf.d
 
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:6.2.3
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.6.0
     container_name: elasticsearch
     environment:
       - discovery.type=single-node
@@ -27,7 +27,7 @@ services:
       - esnet
 
   kibana:
-    image: docker.elastic.co/kibana/kibana:6.2.3
+    image: docker.elastic.co/kibana/kibana:6.6.0
     volumes:
       - ./kibana/kibana.yml:/usr/share/kibana/config/kibana.yml
     environment:
@@ -36,7 +36,7 @@ services:
     networks:
       - esnet
   logstash:
-    image: docker.elastic.co/logstash/logstash:6.2.3
+    image: docker.elastic.co/logstash/logstash:6.6.0
     ports:
       - 5044:5044
     volumes:
